@@ -85,6 +85,17 @@ module.exports = {
             date: moment().format("YYYY-MM-DD HH:mm:ss"),
           });
           await monitor_model.save();
+          const log = new MessageEmbed()
+            .setColor(config.embed_color)
+            .setTitle("Monitor Oluşturuldu - " + config.services_name)
+            .setDescription(`Monitor adı: ${monitor_name}\nMonitor linki: ${monitor_link}\nMonitor ID: ${interaction.user.id}`)
+            .setFooter({ text: config.embed_footer, iconURL: client.user.avatarURL() })
+            .setTimestamp();
+          try {
+            client.channels.cache.get(config.log_channel_id).send(log);
+          } catch (e) {
+            console.log(e)
+          }
           await interaction.editReply({ embeds: [monitor_embed], ephemeral: true });
         }
       }).catch(async (error) => {
