@@ -50,7 +50,16 @@ module.exports = {
         if(response.data.status == "error") return await interaction.editReply({ embeds: [olustur_hata], ephemeral: true });
         if(response.data.status == "success") {
           await monitor.deleteOne({ monitorID: monitor_id, userID: interaction.user.id });
-          await interaction.editReply({ content: "Monitor başarıyla silindi.", ephemeral: true });
+          const embed_success = new MessageEmbed()
+            .setColor(config.embed_color)
+            .setTitle("Başarılı - " + config.services_name)
+            .setDescription("Monitor başarıyla silindi.")
+            .setFooter({ text: config.embed_footer, iconURL: client.user.avatarURL() });
+        try {
+            return await interaction.editReply({ embeds: [embed_success], ephemeral: true });
+        } catch (error) {
+            console.log(error)
+        }
         }
       }).catch(async (error) => {
         console.log(error);
