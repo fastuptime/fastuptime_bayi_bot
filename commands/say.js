@@ -44,7 +44,11 @@ module.exports = {
               .setTitle("Monitor Limitleri - " + config.services_name)
               .setDescription("Sistem Sınırı: **" + response.data.message + "**\nEkleme Sınırınız: **" + user_limit + "**")
               .setFooter({ text: config.embed_footer, iconURL: client.user.avatarURL() });
-         return await interaction.editReply({ embeds: [embed] });
+          try {
+               return await interaction.editReply({ embeds: [embed] });
+            } catch(e) {
+              console.log(e)
+            }
         }
       }).catch(async (error) => {
         console.log(error);
