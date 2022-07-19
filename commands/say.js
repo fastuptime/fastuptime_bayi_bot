@@ -44,12 +44,12 @@ module.exports = {
               .setTitle("Monitor Limitleri - " + config.services_name)
               .setDescription("Sistem Sınırı: **" + response.data.message + "**\nEkleme Sınırınız: **" + user_limit + "**")
               .setFooter({ text: config.embed_footer, iconURL: client.user.avatarURL() });
-          await interaction.editReply({ embeds: [embed] });
+         return await interaction.editReply({ embeds: [embed] });
         }
       }).catch(async (error) => {
         console.log(error);
         olustur_hata.setDescription("Hata Req Res Hatasıdır." );
-        await interaction.editReply({ embeds: [olustur_hata], ephemeral: true });
+        return await interaction.editReply({ embeds: [olustur_hata], ephemeral: true });
       });
   },
 };
