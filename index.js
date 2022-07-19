@@ -2,6 +2,9 @@ const { glob } = require("glob");
 const { promisify } = require("util");
 const globPromise = promisify(glob);
 const Discord = require('discord.js');
+const axios = require("axios");
+var FormData = require('form-data');
+var qs = require('qs');
 const { Client, Collection, Intents, WebhookClient, MessageEmbed, MessageActionRow, MessageButton } = require("discord.js");
 const client = new Client({
     intents: [
@@ -39,6 +42,67 @@ const monitor = require("./models/monitor.js");
 client.on("ready", () => {
     client.user.setActivity('activity', { type: config.setActivity_type });
     client.user.setPresence({ activities: [{ name:  config.ready }], status: config.setStatus_type });
+});
+
+client.on("guildMemberRemove", async (member) => {
+    const guild = member.guild;
+    if(config.serverID == guild.id) {
+        var data = qs.stringify({
+          'key': config.fast_uptime_apikey,
+          'action': 'my_monitors',
+          'desc': member.user.id,
+      });
+       var config_data = {
+            method: 'post',
+            url: "https://fastuptime.com/api/v2",
+            headers: {
+                'Content-Type': 'application/x-www-form-urlencoded',
+                'User-Agent': 'FastUptime/1.0 FastUptime System',
+            },
+            data : data
+      };
+
+      axios(config_data).then(async (response) => {
+        if(response.data.status == "error") {
+            console.log(response.data.message);
+        }
+        let monitors = response.data;
+        monitors.forEach(element => {
+          /////////////////////////////////////
+          var data_del = qs.stringify({
+                'key': config.fast_uptime_apikey,
+                'action': 'delete',
+                'desc': member.user.id,
+                'monitor_id': element.id,
+            });
+            var config_data_del = {
+                method: 'post',
+                url: "https://fastuptime.com/api/v2",
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded',
+                    'User-Agent': 'FastUptime/1.0 FastUptime System',
+                },
+                data : data_del
+            };
+            try {
+                axios(config_data_del).then(async (response) => {
+                    if(response.data.status == "error") {
+                        console.log(response.data.message);
+                    }
+
+                    if(response.data.status == "success") {
+                        console.log('Monitor Silindi');
+                    }
+                });
+            } catch (e) {
+                
+            }
+          /////////////////////////////////////
+        });
+      }).catch(async (error) => {
+        console.log(error);
+      });
+    }
 });
 
 /////////////////////////////////////////////////////
