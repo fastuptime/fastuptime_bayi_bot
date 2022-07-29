@@ -1,8 +1,10 @@
 # fastuptime_bayi_bot
 FastUptime.COM API Bayi botu discord v13
 
+Botu Değiştirmek Düzenlemek Yasaktır!
+-------------------------------------
 
-#Support
+# Support
 - [Discord](https://discord.com/invite/65exWz2dQ6)
 - [FastUptime](https://fastuptime.com)
 - [FastUptime Api Key](https://fastuptime.com/api_key)
