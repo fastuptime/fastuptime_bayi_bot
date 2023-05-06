@@ -3,6 +3,10 @@ const { promisify } = require("util");
 const globPromise = promisify(glob);
 const path = require("path"); // Path
 const fs = require("fs"); // File System
+const config = require("../config.js");
+//////////////////////////////MODELS//////////////////////////////
+const hesap = require("../models/user.js");
+const monitor = require("../models/monitor.js");
 const { Collection, Discord } = require("discord.js"); // Discord.js V14
 
 module.exports = function (client) {
@@ -28,9 +32,9 @@ module.exports = function (client) {
       try {
         if (command.admin) {
           if (interaction.user.id !== config.ownerID) return interaction.reply({ content: "Bu komutu kullanmak için gerekli yetkiye sahip değilsin.", ephemeral: true }).catch(console.error);
-            command.run(client, interaction);
+            command.run(client, interaction, config, hesap, monitor, args)
         } else {
-            command.run(client, interaction);
+            command.run(client, interaction, config, hesap, monitor, args)
         }
       } catch (e) {
         interaction.followUp({ content: e.message });
